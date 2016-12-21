@@ -8,7 +8,8 @@
     "url": "git+https://github.com/rappab/TerrorMap.git"
   },
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "deploy": "gcloud app deploy"
   },
   "author": "",
   "license": "ISC",
