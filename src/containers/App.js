@@ -6,13 +6,15 @@ import { AppBar } from 'material-ui';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+import jsonObj from '../jsonObj';
+
 class App extends React.Component {
 
 	constructor(){
 		super();
 		this.state = {
 			linkArray: [],
-			data: "No data"
+			data: JSON.stringify(jsonObj)
 		}
 		this.fetchPageLinks = this.fetchPageLinks.bind(this)
 	}
@@ -37,14 +39,16 @@ class App extends React.Component {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 				},
+				mode: "no-cors"
 			})
 	      	.then((res) => {
-		        console.log(res)
-		        if (res.ok) {
-			        this.setState({data:res.json()});
-		      	}else{
-			        this.setState({data:"Fetch Error"});
-		      	}
+		        console.log(jsonObj.query.pages["17584796"].links)
+
+		       //  if (res.ok) {
+			      //   this.setState({data:res.json()});
+		      	// }else{
+			      //   this.setState({data:"Fetch Error"});
+		      	// }
 	      	});
     }
 
