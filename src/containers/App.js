@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import fetchWikiData from '../actions/fetchWikiData.js';
 import fetch from 'isomorphic-fetch';
-import { AppBar } from 'material-ui';
+import { AppBar, Paper } from 'material-ui';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
@@ -42,7 +44,19 @@ class App extends React.Component {
 				mode: "no-cors"
 			})
 	      	.then((res) => {
-		        console.log(jsonObj.query.pages["17584796"].links)
+	      		
+	      		res = jsonObj // TODO: REMOVE THIS WHEN HOSTED ON CLOUD
+
+	      		var pageLinks = [];
+	      		// Check response for the Page Links we're interested in -> "List of terrorist incidents"
+	      		res.query.pages["17584796"].links.map( (link) => {
+	      			var target = "List of terrorist incidents";
+	      			var exclude = "Template";
+	      			if( link.title.indexOf(target) !== -1 &&		// indexOf() returns -1 if the target string is not found
+	      				link.title.indexOf(exclude) == -1 )		// exclude substring "Template"
+	      				pageLinks.push(link);
+	      		})
+		        this.setState({linkArray: pageLinks})
 
 		       //  if (res.ok) {
 			      //   this.setState({data:res.json()});
@@ -56,10 +70,20 @@ class App extends React.Component {
 		return (
 			<div>
 				<AppBar title="Terror Map" showMenuIconButton={false}/>
-				<h1>Terror Map</h1>
-				<button onClick={this.fetchPageLinks}> Fetch Data</button>
-				<p>{this.state.data} </p>
-
+				<Paper>
+					<button onClick={this.fetchPageLinks}> Fetch Data</button>
+					<Table>
+						<TableBody>
+						{	// For each Page Link create a new Row
+							this.state.linkArray.map((link, index) => (
+								<TableRow  key={index} striped={true}>
+									<TableRowColumn>{link.title}</TableRowColumn>
+								</TableRow>
+							))
+						}
+						</TableBody>
+					</Table>
+				</Paper>
 			</div>
 		);
 	}
