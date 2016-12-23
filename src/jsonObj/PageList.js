@@ -1,4 +1,4 @@
-const jsonObj = {
+const PageList = {
     "batchcomplete": "",
     "query": {
         "pages": {
@@ -325,4 +325,4 @@ const jsonObj = {
     }
 };
 
-export default jsonObj;
+export default PageList;
