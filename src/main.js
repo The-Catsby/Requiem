@@ -6,12 +6,17 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import setMuiTheme from './setMuiTheme';
 
 import App from './containers/App';
+import configureStore from './configureStore';
 
+const preloadedState = window.__PRELOADED_STATE__;
+const store = configureStore(preloadedState);
 const muiTheme = setMuiTheme(navigator.userAgent);
 
 render(
   	<MuiThemeProvider muiTheme={muiTheme}>
-		<App />
+  		<Provider store={store}>
+			<App />
+		</Provider>
   	</MuiThemeProvider>,
 	document.getElementById('root')
 );

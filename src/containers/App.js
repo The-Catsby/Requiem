@@ -12,7 +12,8 @@ import PageList from '../jsonObj/PageList';
 import PageContent from '../jsonObj/PageContent';
 
 //	Components
-import Mabbox from '../components/mapbox';
+import Mapbox from '../components/mapbox';
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl.js';
 
 const style = {
 	alignContent: 'center',
@@ -23,14 +24,17 @@ const style = {
 
 class App extends React.Component {
 
-	constructor(){
-		super();
+	constructor(props){
+		super(props);
 		this.state = {
 			linkArray: [],
-			data: ""
+			data: "",
+			map: null,
 		}
-		this.fetchPageLinks = this.fetchPageLinks.bind(this)
-		this.fetchPageContent = this.fetchPageContent.bind(this)
+		this.fetchPageLinks = this.fetchPageLinks.bind(this);
+		this.fetchPageContent = this.fetchPageContent.bind(this);
+		this.addSource = this.addSource.bind(this);
+		this.removeSource = this.removeSource.bind(this);
 	}
 
 	componentWillMount(){
@@ -38,6 +42,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount(){
+		//this.setState({map:props.map});
 		this.fetchPageContent("List_of_terrorist_incidents_in_1970");
 	}
 	componentWillUnmount(){
@@ -139,12 +144,42 @@ class App extends React.Component {
     	// console.log(tables);
     }
 
+    addSource(){
+    	// add to map
+    	this.map.addSource('some id', {
+		   type: 'video',
+		   url: [
+		       'https://www.mapbox.com/blog/assets/baltimore-smoke.mp4',
+		       'https://www.mapbox.com/blog/assets/baltimore-smoke.webm'
+		   ],
+		   coordinates: [
+		       [-76.54, 39.18],
+		       [-76.52, 39.18],
+		       [-76.52, 39.17],
+		       [-76.54, 39.17]
+		   ]
+		});
+		// update
+		var mySource = this.map.getSource('some id');
+		mySource.setCoordinates([
+		    [-76.54335737228394, 39.18579907229748],
+		    [-76.52803659439087, 39.1838364847587],
+		    [-76.5295386314392, 39.17683392507606],
+		    [-76.54520273208618, 39.17876344106642]
+		]);
+    }
+
+    removeSource(){
+		this.map.removeSource('some id');  // remove
+    }
+
 	render(){
+
 		return (
 			<div>
-				<AppBar title="Terror Map" showMenuIconButton={false}/>
+				<AppBar title="Project Requiem" showMenuIconButton={false}/>
 
-				<Mabbox />
+				<Mapbox />
 
 				<Paper style={style}>
 					<RaisedButton 
@@ -152,6 +187,7 @@ class App extends React.Component {
 						primary={true}
 						label="Fetch Data"
 						/>
+
 					<Table>
 						<TableBody>
 						{	// For each Page Link create a new Row
